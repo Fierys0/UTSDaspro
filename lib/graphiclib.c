@@ -14,6 +14,18 @@
 #define AC_WHITE "\x1b[37m"
 #define AC_NORMAL "\x1b[m"
 
+#ifdef _WIN32
+void clearScreen()
+{
+    system("cls");
+}
+#else
+void clearScreem()
+{
+    system("clear");
+}
+#endif
+
 int borderWidth, borderHeight;
 
 void MatrixAnimation(char* stringData,unsigned int characterDelay, unsigned int textDelay)
