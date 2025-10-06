@@ -20,7 +20,7 @@ void clearScreen()
     system("cls");
 }
 #else
-void clearScreem()
+void clearScreen()
 {
     system("clear");
 }
