@@ -1,5 +1,7 @@
 #include "lib/graphiclib.c"
 
+// VARIABLE KRUSIAL
+// JANGAN DIHAPUS ATAU VALUE = 0
 int borderWidth = 50;
 int borderHeight = 5;
 
