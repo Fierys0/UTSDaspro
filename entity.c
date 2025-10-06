@@ -3,18 +3,17 @@ struct weaponData {
     int speed;
     int effect;
     char* weaponName;
-}
+};
 
 struct armorData {
     int resistance;
-}
+    char* armorName;
+};
 
 struct entityData {
+    int maxHealth;
     int health;
     char* name;
-    struct weaponData;
-    struct armorData;
-}
-
-struct entityData Player;
-Player.health = 100;
+    struct weaponData weapon;
+    struct armorData armor;
+};

@@ -1,4 +1,5 @@
 #include "lib/graphiclib.c"
+#include "entity.c"
 
 // VARIABLE KRUSIAL
 // JANGAN DIHAPUS ATAU VALUE = 0

@@ -80,7 +80,7 @@ void putBar(int row, const char* name, int hp, int maxHP, char* ui, int barWidth
     int filled = (hp * barWidth) / maxHP;
     if (filled > barWidth) filled = barWidth;
 
-    // format: "<Name HP x/y [=====     ]>"
+    // Membuat hp bar dengan format "[======  ]"
     int len = sprintf(line, "<%s HP %d/%d [", name, hp, maxHP);
 
     for (int b = 0; b < barWidth; b++) {
@@ -90,26 +90,25 @@ void putBar(int row, const char* name, int hp, int maxHP, char* ui, int barWidth
     line[len++] = '>';
     line[len] = '\0';
 
-    // calculate offset (skip left border '#')
+    // Menghitung offset antara hp bar dan border
     int offset = row * (borderWidth + 1) + 1;
 
-    // max length allowed inside (between the 2 borders)
     int maxLen = borderWidth - 2;
     if ((int)strlen(line) > maxLen) {
-        line[maxLen] = '\0'; // truncate if too long
+        line[maxLen] = '\0';
     }
 
     strncpy(&ui[offset], line, strlen(line));
 }
 
-// main battle UI
-char* battleUI(const char* playerName, const char* enemyName,
-               int enemyHP, int playerHP, int enemyMaxHP, int playerMaxHP)
+// Fungsi battle UI
+char* battleUI(const char* playerName, const char* enemyName, int enemyHP, int playerHP, int enemyMaxHP, int playerMaxHP)
 {
-    int barWidth = borderWidth - 22; // leave more room for "<", ">", numbers
+    // Membuat ruang untuk tanda "<" dan ">" nanti
+    int barWidth = borderWidth - 22;
     if (barWidth < 10) barWidth = 10;
 
-    // allocate buffer for box
+    // allocate buffer untuk kotaknya
     int bufferSize = (borderWidth + 1) * borderHeight + 1;
     char* ui = malloc(bufferSize);
     if (!ui) return NULL;
@@ -127,10 +126,10 @@ char* battleUI(const char* playerName, const char* enemyName,
     }
     ui[k] = '\0';
 
-    // enemy HP bar (row 1)
+    // Memasukan hpbar musuh di paling atas
     putBar(1, enemyName, enemyHP, enemyMaxHP, ui, barWidth);
 
-    // player HP bar (row borderHeight - 2)
+    // Memasukan hpbar player di paling bawah
     putBar(borderHeight - 2, playerName, playerHP, playerMaxHP, ui, barWidth);
 
     return ui;
