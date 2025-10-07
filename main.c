@@ -13,4 +13,9 @@ int main()
         printf("%s", ui);
         free(ui);
     }
+
+    printf("%s", AC_RED);
+    MatrixAnimation("Goblin Menyerang Anda", 10000, 10000);
+
+    clearScreen();
 }
