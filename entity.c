@@ -2,6 +2,8 @@ struct weaponData {
     int weaponID;
     char* weaponName;
     int damage;
+    float critRate;
+    float critDamage;
     int speed;
     int effect;
 };
@@ -21,6 +23,7 @@ struct entityData {
     struct weaponData weapon;
     struct armorData armor;
     int level;
+    int defense;
     int baseDamage;
     int baseExpDrop;
     int baseMoneyDrop;
@@ -43,3 +46,33 @@ struct Player {
     int defensePoint;
     int statusEffect[4];
 };
+
+
+struct entityData Dragon = {
+    01,
+    "Dragon",
+    1000,
+    1000,
+    struct weaponData Claws,
+    struct weaponData noArmor,
+    100,
+    50,
+    100,
+    100,
+    100,
+}
+
+
+struct entityData Slime = {
+    02,
+    "Slime",
+    1000,
+    1000,
+    struct weaponData Claws,
+    struct weaponData noArmor,
+    100,
+    50,
+    100,
+    100,
+    100,
+}
