@@ -44,6 +44,8 @@ struct Player {
     int strengthPoint;
     int agilityPoint;
     int defensePoint;
+    int exp;
+    int money;
     int statusEffect[4];
 };
 

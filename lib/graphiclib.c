@@ -55,38 +55,6 @@ void matrixAnimation(char* stringData,unsigned int characterDelay, unsigned int 
 	}
 }
 
-char* createBorder() {
-    // init buffer string yang akan digunakan dengan menggunakan data panjang dan lebar yang sudah diberikan 
-    int bufferSize = (borderWidth + 1) * borderHeight + 1;
-    char* borderString = malloc(bufferSize);
-
-    // Mengecek agar borderString tidak kosong, jika kosong maka return null atau keluar function
-    if (!borderString) return NULL;
-
-    //initialize variabel k yang akan di gunakan dalam loop nanti
-    int k = 0;
-
-    // meloop data sesuai dengan panjang dari border
-    for (int i = 0; i < borderHeight; i++) 
-    {
-        for (int j = 0; j < borderWidth; j++) 
-        {
-            // Mengecek jika posisi panjang ada di paling atas atau paling bawah
-            if (i == 0 || i == borderHeight - 1 || j == 0 || j == borderWidth - 1) 
-            {
-                borderString[k++] = '#';
-            } else {
-                borderString[k++] = ' ';
-            }
-        }
-        borderString[k++] = '\n';
-    }
-
-    // memastikan bahwa akhir string adalah null
-    borderString[k] = '\0';
-    return borderString;
-}
-
 // Fungsi battle UI
 void battleUI(struct Player player, struct entityData enemy, int borderHeight, borderWidth)
 {
@@ -206,10 +174,43 @@ struct battleAttack(struct playerData *player, struct entityData *enemy)
     if (isPlayerMove)
     {
         enemy->health = enemy->health - (playerDamage - enemy->defense);
+        player->health = player->health - (enemyDamage - player->armor->baseDefense);
+        if (player->health == 0) gameOver();
     } else
     {
         player->health = player->health - (enemyDamage - player->armor->baseDefense);
+        if (player->health == 0) gameOver();
+        enemy->health = enemy->health - (playerDamage - enemy->defense);
     }
+
+}
+
+struct battleEnd(struct Player player, struct entityData enemy)
+{
+    int levelRequirement[100];
+    int expNeeded = 150;
+    for (int i = 0; i <= 100; i++)
+    {
+        levelRequirement[i] = 150 + 2**i;
+    }
+    srand(time(NULL));
+    int expBonus = rand() % enemy.baseExpDrop;
+    int totalExp = enemy.baseExpDrop + expBonus;
+
+    int moneyBonus = rand() % enemy.baseMoneyDrop;
+    int totalMoney = enemy.baseMoneyDrop + moneyBonus;
+
+    player.exp += totalExp;
+    player.money += totalMoney;
+
+    for (int i = 0; i <= 100; i++)
+    {
+        if(player.exe >= levelRequirement[i])
+        {
+            player.level = i + 1;
+        }
+    }
+    return player;
 }
 
 struct randomBattle()
