@@ -28,7 +28,7 @@ void clearScreen()
 
 int borderWidth, borderHeight;
 
-void MatrixAnimation(char* stringData,unsigned int characterDelay, unsigned int textDelay)
+void matrixAnimation(char* stringData,unsigned int characterDelay, unsigned int textDelay)
 {
     // Memastikan randomness akan berbeda setiap kali program dijalankan
 	srand(time(NULL));
@@ -87,62 +87,140 @@ char* createBorder() {
     return borderString;
 }
 
-void putBar(int row, const char* name, int hp, int maxHP, char* ui, int barWidth) {
-    char line[256];
-    int filled = (hp * barWidth) / maxHP;
-    if (filled > barWidth) filled = barWidth;
-
-    // Membuat hp bar dengan format "[======  ]"
-    int len = sprintf(line, "<%s HP %d/%d [", name, hp, maxHP);
-
-    for (int b = 0; b < barWidth; b++) {
-        line[len++] = (b < filled) ? '=' : ' ';
+// Fungsi battle UI
+void battleUI(struct Player player, struct entityData enemy, int borderHeight, borderWidth)
+{
+    char borderBuffer[borderWidth];
+    for (int i = 0; i <= borderWidth; i++)
+    {
+        borderBuffer[i] = '=';
     }
-    line[len++] = ']';
-    line[len++] = '>';
-    line[len] = '\0';
+    printf("%s\n", borderBuffer);
+    
+    printf("%s%s %sHP %d/%d\n", AC_RED, enemy.name, AC_NORMAL, enemy.health, enemy.maxHealth);
 
-    // Menghitung offset antara hp bar dan border
-    int offset = row * (borderWidth + 1) + 1;
+    drawHealth(enemy.health, enemy.maxHealth);
+    
+    printf("\n%s%s %sHP %d/%d\n", AC_RED, player.name, AC_NORMAL, player.health, player.maxHealth);
+    
+    printf("%s\n", borderBuffer)
 
-    int maxLen = borderWidth - 2;
-    if ((int)strlen(line) > maxLen) {
-        line[maxLen] = '\0';
-    }
-
-    strncpy(&ui[offset], line, strlen(line));
+    return;
 }
 
-// Fungsi battle UI
-char* battleUI(const char* playerName, const char* enemyName, int enemyHP, int playerHP, int enemyMaxHP, int playerMaxHP)
+void drawHealth(int health, int maxHealth)
 {
-    // Membuat ruang untuk tanda "<" dan ">" nanti
-    int barWidth = borderWidth - 22;
-    if (barWidth < 10) barWidth = 10;
+    char healthSymbol = '█'
 
-    // allocate buffer untuk kotaknya
-    int bufferSize = (borderWidth + 1) * borderHeight + 1;
-    char* ui = malloc(bufferSize);
-    if (!ui) return NULL;
-
-    int k = 0;
-    for (int i = 0; i < borderHeight; i++) {
-        for (int j = 0; j < borderWidth; j++) {
-            if (i == 0 || i == borderHeight - 1 || j == 0 || j == borderWidth - 1) {
-                ui[k++] = '#';
-            } else {
-                ui[k++] = ' ';
-            }
+    float entityHealthPercentage = (float)health / maxHealth * 100
+    int barLength = (int)entityHealthPercentage % 10
+    for (int i = 1; i <= 10; i++)
+    {
+        for (int j = 1; j <= barLength; j++)
+        {
+            printf("%s%c", AC_GREEN, healthSymbol);
         }
-        ui[k++] = '\n';
+        
+        printf("%s%c", AC_RED, healthSymbol);
     }
-    ui[k] = '\0';
 
-    // Memasukan hpbar musuh di paling atas
-    putBar(1, enemyName, enemyHP, enemyMaxHP, ui, barWidth);
+    return;
+}
 
-    // Memasukan hpbar player di paling bawah
-    putBar(borderHeight - 2, playerName, playerHP, playerMaxHP, ui, barWidth);
+void mainMenu(struct entityData player)
+{
+    while(1)
+    {
+        int pilihan;
+        clearScreen();
+        printf("1. Random Battle\n2.Exit")
+        scanf("%d", &pilihan);
+        switch(pilihan)
+        {
+            case 1:
+                randomBattle(player, 0);
+                break;
+            case 2:
+                return;
+        }
+    }
+}
 
-    return ui;
+void startBattle(struct playerData player, struct entityData enemy)
+{
+    
+    if (enemy == NULL)
+    {
+        enemy = randomBattle();
+    }
+    
+    battleUI(player, enemy);
+    matrixAnimation("%s%s Menyerang!", AC_RED, enemy.name);
+
+    while (1)
+    {
+        char pilihan;
+        scanf("(A)ttack     (D)efense");
+        switch (pilihan)
+        {
+            case 'A':
+                battleAttack(&player, &enemy);
+                break;
+            case 'D':
+                battleDefense();
+                break;
+            default:
+                clearScreen();
+                break;
+
+        }
+    }
+}
+
+struct battleAttack(struct playerData *player, struct entityData *enemy)
+{
+    srand(time(NULL));
+    int playerDamage = player->baseDamage + player->weapon->damage;
+    int enemyDamage = enemy->baseDamage + enemy->weapon->damage;
+
+    bool isPlayerCrit = false;
+    bool isEnemyCrit = false;
+    int critPlayer = rand() % 100;
+    int critEnemy = rand() % 100;
+    if (critPlayer <= player->weapon->critRate * 100){isPlayerCrit = true;}
+    if (critEnemy <= enemy->weapon->critRate * 100){isEnemyCrit = true;}
+    if (isPlayerCrit)
+    {
+        playerDamage =  (int)((float)playerDamage * player->weapon->critDamage)
+    }
+    if (isEnemyCrit)
+    {
+        enemyDamage = (int)((float)playerDamage * player->weapon->critDamage);
+    }
+    bool isPlayerMove = false;
+    // Siapa yang jalan duluan
+    if (player->weapon->speed > enemy->weapon->speed){
+        isPlayerMove = true;
+    }
+
+    if (isPlayerMove)
+    {
+        enemy->health = enemy->health - (playerDamage - enemy->defense);
+    } else
+    {
+        player->health = player->health - (enemyDamage - player->armor->baseDefense);
+    }
+}
+
+struct randomBattle()
+{
+    srand(time(NULL));
+
+    int entityCount = sizeof(enemies)/sizeof(enemies[0]);
+
+    int randomIndex = rand() % entityCount;
+
+    struct entityData randomEnemy = enemies[randomIndex];
+
+    return randomEnemy;
 }

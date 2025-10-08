@@ -1,0 +1,3 @@
+struct entityData enemies[] =
+{}, 
+{},
