@@ -56,7 +56,7 @@ void matrixAnimation(char* stringData,unsigned int characterDelay, unsigned int 
 }
 
 // Fungsi battle UI
-void battleUI(struct Player player, struct entityData enemy, int borderHeight, borderWidth)
+void battleUI(struct player, struct enemy, int borderHeight, borderWidth)
 {
     char borderBuffer[borderWidth];
     for (int i = 0; i <= borderWidth; i++)
@@ -78,10 +78,10 @@ void battleUI(struct Player player, struct entityData enemy, int borderHeight, b
 
 void drawHealth(int health, int maxHealth)
 {
-    char healthSymbol = '█'
+    char* healthSymbol = '█';
 
-    float entityHealthPercentage = (float)health / maxHealth * 100
-    int barLength = (int)entityHealthPercentage % 10
+    float entityHealthPercentage = (float)health / maxHealth * 100;
+    int barLength = (int)entityHealthPercentage % 10;
     for (int i = 1; i <= 10; i++)
     {
         for (int j = 1; j <= barLength; j++)
@@ -95,13 +95,13 @@ void drawHealth(int health, int maxHealth)
     return;
 }
 
-void mainMenu(struct entityData player)
+void mainMenu(struct player)
 {
     while(1)
     {
         int pilihan;
         clearScreen();
-        printf("1. Random Battle\n2.Exit")
+        printf("1. Random Battle\n2.Exit");
         scanf("%d", &pilihan);
         switch(pilihan)
         {
@@ -114,7 +114,7 @@ void mainMenu(struct entityData player)
     }
 }
 
-void startBattle(struct playerData player, struct entityData enemy)
+void startBattle(struct player, struct enemy)
 {
     
     if (enemy == NULL)
@@ -145,7 +145,7 @@ void startBattle(struct playerData player, struct entityData enemy)
     }
 }
 
-struct battleAttack(struct playerData *player, struct entityData *enemy)
+struct battleAttack(struct *player, struct *enemy)
 {
     srand(time(NULL));
     int playerDamage = player->baseDamage + player->weapon->damage;
@@ -185,7 +185,7 @@ struct battleAttack(struct playerData *player, struct entityData *enemy)
 
 }
 
-struct battleEnd(struct Player player, struct entityData enemy)
+struct battleEnd(struct player, struct enemy)
 {
     int levelRequirement[100];
     int expNeeded = 150;

@@ -1,5 +1,8 @@
 #include "lib/graphiclib.c"
-#include "entity.c"
+#include "weaponTable.c"
+#include "enemyTable.c"
+#include "playerData.c"
+#include "armorTable.c"
 
 // VARIABLE KRUSIAL
 // JANGAN DIHAPUS ATAU VALUE = 0
