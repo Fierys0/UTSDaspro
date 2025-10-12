@@ -4,7 +4,10 @@
 #include <unistd.h>
 #include <time.h>
 #include <stdbool.h>
-#include "data.h"
+#include "armorTable.c"
+#include "weaponTable.c"
+#include "enemyTable.c"
+#include "playerData.c"
 
 #define AC_BLACK "\x1b[30m"
 #define AC_RED "\x1b[31m"
@@ -150,8 +153,7 @@ struct entityData randomBattle() {
     extern struct entityData enemies[];
     srand(time(NULL));
 
-    int entityCount = sizeof(enemies) / sizeof(enemies[0]);
-    int randomIndex = rand() % entityCount;
+    int randomIndex = rand() % 3;
 
     return enemies[randomIndex];
 }
@@ -183,6 +185,14 @@ void startBattle(struct Player player, struct entityData enemy) {
         }
         sleep(1);
     }
+
+    if (player.health > 0)
+    {
+        battleEnd(&player, &enemy);
+    } else
+    {
+        gameOver();
+    }
 }
 
 void mainMenu(struct Player player) {
@@ -207,7 +217,29 @@ void mainMenu(struct Player player) {
                 break;
         }
     }
+    
 }
+
+void showMenu(void) {
+    printf("=== MENU ===\n");
+    printf("1. Battle\n");
+    printf("2. Exit\n");
+}
+
+void runUI(void) {
+    int choice;
+    while (1) {
+        showMenu();
+        printf("Choose: ");
+        scanf("%d", &choice);
+
+        if (choice == 1)
+            randomBattle();
+        else
+            break;
+    }
+}
+
 
 void gameOver() {
     printf("\n%sGAME OVER!%s\n", AC_RED, AC_NORMAL);

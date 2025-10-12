@@ -1,12 +1,11 @@
 #include "entity.h"
-#include "weaponTable.c"   // contains extern struct weaponData weapon[];
 
-struct entityData enemies[2];  // Declare but don’t initialize weapons yet
+struct entityData enemies[3];  // Declare but don’t initialize weapons yet
 
 void initEnemies(void) {
     enemies[0] = (struct entityData){
         "Slime", 20, 20,
-        weapon[0],  // ✅ assign at runtime
+        weapon[0],
         1, 1, 4, 3, 2,
         1.0f, 1.0f,
         {0,0,0,0}
@@ -20,3 +19,5 @@ void initEnemies(void) {
         {0,0,0,0}
     };
 }
+
+// const int entityCount = sizeof(enemies) / sizeof(enemies[0]);
