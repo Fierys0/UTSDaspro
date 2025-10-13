@@ -18,7 +18,7 @@ int main()
 //    }
 //    strcpy(player.name, namaPlayer);
 
-    runUI();
+    mainMenu(player);
 
     clearScreen();
 

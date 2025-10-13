@@ -32,7 +32,7 @@ int borderHeight = 5;
 void matrixAnimation(const char* stringData, unsigned int characterDelay, unsigned int textDelay);
 void drawHealth(int health, int maxHealth);
 void battleUI(struct Player player, struct entityData enemy);
-void startBattle(struct Player player, struct entityData enemy);
+struct Player startBattle(struct Player player, struct entityData enemy);
 void battleAttack(struct Player* player, struct entityData* enemy);
 struct entityData randomBattle();
 void battleEnd(struct Player* player, struct entityData* enemy);
@@ -153,12 +153,12 @@ struct entityData randomBattle() {
     extern struct entityData enemies[];
     srand(time(NULL));
 
-    int randomIndex = rand() % 3;
+    int randomIndex = rand() % 2;
 
     return enemies[randomIndex];
 }
 
-void startBattle(struct Player player, struct entityData enemy) {
+struct Player startBattle(struct Player player, struct entityData enemy) {
     if (enemy.name == NULL) {
         enemy = randomBattle();
     }
@@ -193,6 +193,8 @@ void startBattle(struct Player player, struct entityData enemy) {
     {
         gameOver();
     }
+
+    return player ;
 }
 
 void mainMenu(struct Player player) {
@@ -207,7 +209,7 @@ void mainMenu(struct Player player) {
         switch (pilihan) {
             case 1: {
                 struct entityData enemy = randomBattle();
-                startBattle(player, enemy);
+                player = startBattle(player, enemy);
                 break;
             }
             case 2:
@@ -219,27 +221,6 @@ void mainMenu(struct Player player) {
     }
     
 }
-
-void showMenu(void) {
-    printf("=== MENU ===\n");
-    printf("1. Battle\n");
-    printf("2. Exit\n");
-}
-
-void runUI(void) {
-    int choice;
-    while (1) {
-        showMenu();
-        printf("Choose: ");
-        scanf("%d", &choice);
-
-        if (choice == 1)
-            randomBattle();
-        else
-            break;
-    }
-}
-
 
 void gameOver() {
     printf("\n%sGAME OVER!%s\n", AC_RED, AC_NORMAL);
