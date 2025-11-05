@@ -1,4 +1,4 @@
-#include "game/UI.c"
+#include "game/core.c"
 
 // VARIABLE KRUSIAL
 // JANGAN DIHAPUS ATAU VALUE = 0

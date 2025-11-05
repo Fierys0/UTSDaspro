@@ -18,12 +18,16 @@
 #define AC_CYAN "\x1b[36m"
 #define AC_WHITE "\x1b[37m"
 #define AC_NORMAL "\x1b[m"
+#define STUN 1
 
 #ifdef _WIN32
 void clearScreen() { system("cls"); }
 #else
 void clearScreen() { system("clear"); }
 #endif
+
+int effectList[] = {STUN};
+int effectLength = sizeof(effectList) / sizeof(effectList[0]);
 
 int borderWidth = 40;
 int borderHeight = 5;
@@ -65,7 +69,7 @@ void matrixAnimation(const char* stringData, unsigned int characterDelay, unsign
 }
 
 void drawHealth(int health, int maxHealth) {
-    const char *healthSymbol = "\xE2\x96\x88"; //'█'
+    const char healthSymbol[] = "\xE2\x96\x88"; //'█'
     float healthPercent = (float)health / maxHealth;
     int filledBars = (int)(healthPercent * 10);
 
@@ -96,9 +100,20 @@ void battleUI(struct Player player, struct entityData enemy) {
 
 void battleAttack(struct Player* player, struct entityData* enemy) {
     srand(time(NULL));
-
+    
     int playerDamage = player->baseDamage + player->weapon.damage;
     int enemyDamage = enemy->baseDamage + enemy->weapon.damage;
+
+    for (int i = 0; i <= 3; i++)
+    {
+        for (int j = 0; j <= effectLength; j++)
+        {
+            if (enemy->statusEffect[i] != 0)
+            {
+                enemy->statusEffect[i] == effectList[j];
+            }
+        }
+    }
 
     bool isPlayerCrit = ((float)rand() / RAND_MAX) < player->weapon.critRate;
     bool isEnemyCrit = ((float)rand() / RAND_MAX) < enemy->weapon.critRate;
@@ -133,6 +148,30 @@ void battleAttack(struct Player* player, struct entityData* enemy) {
             printf("%s defeated!\n", enemy->name);
             battleEnd(player, enemy);
         }
+    }
+}
+
+void addStatus(struct entityData *enemy, int Status)
+{
+    for (int i=0; i <= 3; i++)
+    {
+        if (enemy->statusEffect[i] != 0)
+        {
+            enemy->statusEffect[i] == Status;
+        }
+    }
+}
+
+void battleDefend(struct Player *player, struct entityData *enemy)
+{
+    int playerDefense = player->defensePoint + player->armor.baseDefense;
+    int enemyAttack = enemy->baseDamage + enemy->weapon.damage;
+    if (enemyAttack <= playerDefense)
+    {
+        addStatus(enemy, STUN);
+    } else
+    {
+        player->health = player->health - (0.5 * enemyAttack);
     }
 }
 
@@ -178,7 +217,7 @@ struct Player startBattle(struct Player player, struct entityData enemy) {
                 break;
             case 'D':
             case 'd':
-                printf("%s defends!\n", player.name);
+                battleDefend(&player, &enemy);
                 break;
             default:
                 printf("Invalid choice!\n");
