@@ -8,12 +8,16 @@ struct weaponData {
     float critDamage;
     int speed;
     int effect;
+    char description[255];
+    int price;
 };
 
 struct armorData {
     char* armorName;
     int baseDefense;
     int resistance;
+    char description[255];
+    int price;
 };
 
 struct entityData {
